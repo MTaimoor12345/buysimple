@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $title ?? 'E-commerce Store'; ?></title>
+    <title><?php echo $title ?? 'Buy Simple'; ?></title>
+    <link rel="icon" type="image/png" href="<?php echo Helper::url('img/Bu2.png'); ?>">
     <link rel="stylesheet" href="<?php echo Helper::asset('css/style.css'); ?>">
     <link rel="stylesheet" href="<?php echo Helper::asset('css/animations.css'); ?>">
     <link rel="stylesheet" href="<?php echo Helper::asset('css/quick-view.css'); ?>">
@@ -15,7 +16,7 @@
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
                 n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
             if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
             n.queue = []; t = b.createElement(e); t.async = !0;
