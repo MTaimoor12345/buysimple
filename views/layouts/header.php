@@ -39,7 +39,7 @@
         <div class="container">
             <div class="nav-brand">
                 <a href="<?php echo Helper::url(); ?>">
-                    <img src="<?php echo Helper::url('img/bu2.png'); ?>" alt="Logo" class="navbar-logo" onerror="this.onerror=null; this.src='<?php echo Helper::url('img/buylogoo.jpg'); ?>'; this.onerror=null; this.src='<?php echo Helper::url('img/buylogoo.jpeg'); ?>';">
+                    <img src="<?php echo Helper::url('img/Bu2.png'); ?>" alt="Logo" class="navbar-logo" onerror="this.onerror=null; this.src='<?php echo Helper::url('img/buylogoo.jpg'); ?>'; this.onerror=null; this.src='<?php echo Helper::url('img/buylogoo.jpeg'); ?>';">
                 </a>
             </div>
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
