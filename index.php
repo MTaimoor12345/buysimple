@@ -11,7 +11,7 @@ spl_autoload_register(function ($class) {
         __DIR__ . '/controllers/admin/' . $class . '.php',
         __DIR__ . '/middleware/' . $class . '.php',
     ];
-    
+
     foreach ($paths as $path) {
         if (file_exists($path)) {
             require $path;
@@ -102,6 +102,7 @@ $router->get('/admin/orders', 'AdminOrderController@index', ['AdminMiddleware'])
 $router->get('/admin/orders/download', 'AdminOrderController@download', ['AdminMiddleware']);
 $router->post('/admin/orders/update-status', 'AdminOrderController@updateStatus', ['AdminMiddleware']);
 $router->post('/admin/orders/update-payment-status', 'AdminOrderController@updatePaymentStatus', ['AdminMiddleware']);
+$router->get('/admin/orders/delete/{id}', 'AdminOrderController@delete', ['AdminMiddleware']);
 $router->get('/admin/orders/{id}', 'AdminOrderController@show', ['AdminMiddleware']);
 
 // Dispatch the route

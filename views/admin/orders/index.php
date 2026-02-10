@@ -63,8 +63,13 @@
                     </td>
                     <td><?php echo date('M d, Y', strtotime($order['created_at'])); ?></td>
                     <td>
-                        <a href="<?php echo Helper::url('admin/orders/' . $order['id']); ?>"
-                            class="btn btn-sm btn-primary">View</a>
+                        <div style="display: flex; gap: 5px;">
+                            <a href="<?php echo Helper::url('admin/orders/' . $order['id']); ?>"
+                                class="btn btn-sm btn-primary">View</a>
+                            <a href="<?php echo Helper::url('admin/orders/delete/' . $order['id']); ?>"
+                                class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure you want to delete this order?');">Delete</a>
+                        </div>
                     </td>
                 </tr>
             <?php endforeach; ?>
