@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; <?php echo date('Y'); ?> E-Shop. All rights reserved.</p>
+                <p>&copy; <?php echo date('Y'); ?> E-Shop. All BuySimple reserved.</p>
             </div>
         </div>
     </footer>
