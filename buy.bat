@@ -7,7 +7,7 @@
 :: /XF - Specific Files ko exclude karega (config file)
 :: /XD - Specific Folders ko exclude karega (.git, .github aur config folder)
 
-robocopy "C:\xampp\htdocs\haris web" "E:\buysimple" /E /XF "config.php" /XD ".git" ".github" "config"
+robocopy "C:\xampp\htdocs\haris web" "E:\buysimple" /E /XF "database.php" /XD ".git" ".github" "config"
 
 timeout /t 5
 goto loop
