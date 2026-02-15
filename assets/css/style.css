@@ -684,6 +684,43 @@ body {
     }
 }
 
+@media (max-width: 480px) {
+    .hero-carousel {
+        height: auto;
+        min-height: auto;
+    }
+
+    .carousel-container {
+        height: auto;
+    }
+
+    .carousel-slide {
+        position: relative;
+        height: auto;
+        display: none;
+        /* Hide non-active slides */
+        opacity: 1;
+        /* Ensure visible when block */
+    }
+
+    .carousel-slide.active {
+        display: block;
+        /* Show active slide naturally */
+    }
+
+    .carousel-image-full {
+        height: auto;
+    }
+
+    .carousel-image-full img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        position: relative;
+        /* Reset from absolute */
+    }
+}
+
 .carousel-btn {
     position: absolute;
     top: 50%;
@@ -2342,22 +2379,30 @@ a.whatsapp-float i {
         gap: 1.5rem;
     }
 
+    .collection-card {
+        height: 350px;
+        /* Fixed height for consistency on mobile */
+        border-radius: 30px;
+        margin-bottom: 20px;
+    }
+
     .collection-card-couple {
         grid-column: 1;
     }
 
     .collection-title {
-        font-size: 1.25rem;
-        top: 1rem;
+        font-size: 1.5rem;
     }
 
     .collection-image-wrapper {
-        min-height: 300px;
-        padding: 1.5rem 1rem 1rem;
+        height: 100%;
+        padding: 0;
     }
 
     .collection-image-wrapper img {
-        max-height: 250px;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
     }
 
     .collection-whatsapp-icon {

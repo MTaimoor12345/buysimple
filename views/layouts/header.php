@@ -74,12 +74,13 @@
                 <?php
                 $categoryModel = new Category();
                 $categories = $categoryModel->getAll();
-                foreach ($categories as $category):
-                    $subCategories = $categoryModel->getSubCategories($category['id']);
+                foreach ($categories as $navCategory):
+                    $subCategories = $categoryModel->getSubCategories($navCategory['id']);
                     ?>
                     <div class="nav-dropdown">
-                        <a href="<?php echo Helper::url('category/' . $category['slug']); ?>" class="nav-dropdown-toggle">
-                            <?php echo htmlspecialchars($category['name']); ?>
+                        <a href="<?php echo Helper::url('category/' . $navCategory['slug']); ?>"
+                            class="nav-dropdown-toggle">
+                            <?php echo htmlspecialchars($navCategory['name']); ?>
                             <?php if (!empty($subCategories)): ?>
                                 <i class="fas fa-chevron-down"></i>
                             <?php endif; ?>
@@ -87,7 +88,8 @@
                         <?php if (!empty($subCategories)): ?>
                             <div class="nav-dropdown-menu">
                                 <?php foreach ($subCategories as $subCat): ?>
-                                    <a href="<?php echo Helper::url('category/' . $category['slug'] . '/' . $subCat['slug']); ?>">
+                                    <a
+                                        href="<?php echo Helper::url('category/' . $navCategory['slug'] . '/' . $subCat['slug']); ?>">
                                         <?php echo htmlspecialchars($subCat['name']); ?>
                                     </a>
                                 <?php endforeach; ?>
