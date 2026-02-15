@@ -659,7 +659,34 @@ body {
 
 @media (max-width: 768px) {
     .hero-carousel {
-        height: 500px;
+        height: auto;
+        min-height: auto;
+    }
+
+    .carousel-container {
+        height: auto;
+    }
+
+    .carousel-slide {
+        position: relative;
+        height: auto;
+        display: none;
+        opacity: 1;
+    }
+
+    .carousel-slide.active {
+        display: block;
+    }
+
+    .carousel-image-full {
+        height: auto;
+    }
+
+    .carousel-image-full img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        position: relative;
     }
 
     .btn-hero {
@@ -684,7 +711,7 @@ body {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .hero-carousel {
         height: auto;
         min-height: auto;

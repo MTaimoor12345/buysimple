@@ -121,22 +121,175 @@
         </div>
 
         <?php 
-        $galleryImages = Helper::productGalleryUrls($product['gallery'] ?? '');
-        $primaryImage = Helper::productImageUrl($product['image'] ?? '');
-        if ($primaryImage && !in_array($primaryImage, $galleryImages)) {
-            array_unshift($galleryImages, $primaryImage);
+        // Get raw image paths for form submission
+        $rawImages = [];
+        if (!empty($product['image'])) {
+            $rawImages[] = $product['image'];
         }
-        if (!empty($galleryImages)): ?>
+        if (!empty($product['gallery'])) {
+            $gallery = json_decode($product['gallery'], true);
+            if (is_array($gallery)) {
+                $rawImages = array_merge($rawImages, $gallery);
+            }
+        }
+        
+        // Get full URLs for display
+        $displayImages = [];
+        foreach ($rawImages as $img) {
+            $displayImages[] = [
+                'raw' => $img,
+                'url' => Helper::productImageUrl($img)
+            ];
+        }
+        
+        if (!empty($displayImages)): ?>
             <div class="form-group">
-                <label>Current Images</label>
-                <div class="product-images-preview">
-                    <?php foreach ($galleryImages as $img): ?>
-                        <div class="product-image-thumb">
-                            <img src="<?php echo htmlspecialchars($img); ?>" alt="Product image">
+                <label>Current Images <small>(Drag and drop to reorder)</small></label>
+                <div id="sortable-images" class="product-images-preview sortable-grid">
+                    <?php foreach ($displayImages as $index => $imgData): ?>
+                        <div class="product-image-thumb draggable-item" draggable="true" data-index="<?php echo $index; ?>">
+                            <img src="<?php echo htmlspecialchars($imgData['url']); ?>" alt="Product image">
+                            <input type="hidden" name="sorted_images[]" value="<?php echo htmlspecialchars($imgData['raw']); ?>">
+                            <div class="drag-handle"><i class="fas fa-grip-lines"></i></div>
+                            <button type="button" class="btn-remove-image" onclick="removeImage(this)">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </div>
+            
+            <style>
+                .sortable-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                    gap: 1rem;
+                    padding: 1rem;
+                    background: #f8fafc;
+                    border-radius: 8px;
+                    border: 2px dashed #e2e8f0;
+                }
+                .draggable-item {
+                    position: relative;
+                    cursor: move;
+                    transition: transform 0.2s, box-shadow 0.2s;
+                    background: white;
+                    padding: 5px;
+                    border-radius: 4px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                }
+                .draggable-item.dragging {
+                    opacity: 0.5;
+                    border: 2px dashed #2563EB;
+                }
+                .draggable-item:hover {
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                }
+                .draggable-item img {
+                    width: 100%;
+                    height: 100px;
+                    object-fit: cover;
+                    border-radius: 4px;
+                    display: block;
+                }
+                .drag-handle {
+                    position: absolute;
+                    top: 5px;
+                    left: 5px;
+                    background: rgba(0,0,0,0.5);
+                    color: white;
+                    padding: 2px 5px;
+                    border-radius: 3px;
+                    font-size: 10px;
+                }
+                .btn-remove-image {
+                    position: absolute;
+                    top: -5px;
+                    right: -5px;
+                    background: #ef4444;
+                    color: white;
+                    border: none;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 10px;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                }
+            </style>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const container = document.getElementById('sortable-images');
+                    if (!container) return;
+                    
+                    let draggedItem = null;
+                    
+                    const items = container.querySelectorAll('.draggable-item');
+                    
+                    items.forEach(item => {
+                        item.addEventListener('dragstart', function(e) {
+                            draggedItem = this;
+                            setTimeout(() => this.classList.add('dragging'), 0);
+                        });
+                        
+                        item.addEventListener('dragend', function() {
+                            this.classList.remove('dragging');
+                            draggedItem = null;
+                        });
+                        
+                        item.addEventListener('dragenter', function(e) {
+                            e.preventDefault();
+                            if (this !== draggedItem) {
+                                this.style.borderColor = '#2563EB';
+                            }
+                        });
+                        
+                        item.addEventListener('dragleave', function() {
+                            this.style.borderColor = 'transparent';
+                        });
+                    });
+                    
+                    container.addEventListener('dragover', function(e) {
+                        e.preventDefault();
+                        const afterElement = getDragAfterElement(container, e.clientY, e.clientX);
+                        const draggable = document.querySelector('.dragging');
+                        if (afterElement == null) {
+                            container.appendChild(draggable);
+                        } else {
+                            container.insertBefore(draggable, afterElement);
+                        }
+                    });
+                    
+                    function getDragAfterElement(container, y, x) {
+                        const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
+                        
+                        return draggableElements.reduce((closest, child) => {
+                            const box = child.getBoundingClientRect();
+                            const offsetX = x - box.left - box.width / 2;
+                            const offsetY = y - box.top - box.height / 2;
+                            
+                            // We care mostly about position, simplified distance check
+                            const dist = Math.hypot(offsetX, offsetY);
+                            
+                            if (dist < closest.offset) {
+                                return { offset: dist, element: child };
+                            } else {
+                                return closest;
+                            }
+                        }, { offset: Number.POSITIVE_INFINITY }).element;
+                    }
+                });
+                
+                function removeImage(btn) {
+                    if (confirm('Are you sure you want to remove this image? (Update product to save changes)')) {
+                        btn.closest('.draggable-item').remove();
+                    }
+                }
+            </script>
         <?php endif; ?>
 
         <div class="form-group">

@@ -111,15 +111,6 @@ class AdminProductController
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Existing gallery images
-            $existingGallery = [];
-            if (!empty($product['gallery'])) {
-                $decoded = json_decode($product['gallery'], true);
-                if (is_array($decoded)) {
-                    $existingGallery = $decoded;
-                }
-            }
-
             // Handle new uploads
             $newImages = [];
             if (isset($_FILES['images']) && is_array($_FILES['images']['name']) && !empty($_FILES['images']['name'][0])) {
@@ -132,9 +123,21 @@ class AdminProductController
                 $newImages = $uploadResult['files'];
             }
 
-            $allImages = !empty($newImages) ? array_merge($newImages, $existingGallery) : $existingGallery;
-            $primaryImage = !empty($allImages) ? $allImages[0] : ($product['image'] ?? '');
-            $galleryJson = !empty($allImages) ? json_encode($allImages) : null;
+            // Get sorted existing images
+            $existingImages = [];
+            if (isset($_POST['sorted_images']) && is_array($_POST['sorted_images'])) {
+                $existingImages = $_POST['sorted_images'];
+            }
+
+            // Merge existing sorted images with new uploads (append new ones)
+            $allImages = array_merge($existingImages, $newImages);
+
+            // First image is always the main image
+            $primaryImage = !empty($allImages) ? $allImages[0] : '';
+
+            // Rest are gallery images
+            $galleryImages = count($allImages) > 1 ? array_slice($allImages, 1) : [];
+            $galleryJson = !empty($galleryImages) ? json_encode($galleryImages) : null;
 
             $sku = isset($_POST['sku']) ? trim($_POST['sku']) : null;
             if ($sku === '') {
