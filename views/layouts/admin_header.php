@@ -12,7 +12,7 @@
     <div class="admin-layout">
         <aside class="admin-sidebar">
             <div class="sidebar-header">
-                <h2><i class="fas fa-shopping-bag"></i> E-Shop Admin</h2>
+                <h2><i class="fas fa-shopping-bag"></i> BuySimple Admin</h2>
             </div>
             <nav class="sidebar-nav">
                 <a href="<?php echo Helper::url('admin/dashboard'); ?>" class="nav-item">
